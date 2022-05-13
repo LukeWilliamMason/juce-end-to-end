@@ -20,7 +20,9 @@
     "lint": "eslint . --ext .ts",
     "build": "tsc",
     "test": "jest ./tests/**",
-    "test-example": "jest ./example/tests/**"
+    "build-example": "cmake --build cmake-build --target e2e-example-app --parallel 8",
+    "test-example": "jest ./example/tests/**",
+    "open-example": "./cmake-build/example/app/e2e-example-app_artefacts/Release/e2e-example-app.app/Contents/MacOS/e2e-example-app"
   },
   "repository": "git://github.com/Focusrite-Novation/juce-end-to-end.git",
   "keywords": [],
