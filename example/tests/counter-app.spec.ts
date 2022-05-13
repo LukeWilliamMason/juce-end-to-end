@@ -1,4 +1,4 @@
-import {AppConnection} from '../../source/ts';
+import {AppConnection, pollUntil, sleep} from '../../source/ts';
 import {appPath} from './app-path';
 
 describe('Count App tests', () => {
@@ -56,5 +56,18 @@ describe('Count App tests', () => {
     await appConnection.setSliderValue('slider', expectedValue);
     const value = await appConnection.getSliderValue('slider');
     expect(value).toBe(expectedValue);
+  });
+
+  it('Can download content', async () => {
+    const downloadButtonId = 'download-button';
+    const downloadResultId = 'download-result';
+
+    await appConnection.clickComponent(downloadButtonId);
+
+    await pollUntil(
+      (text) => text === 'Content downloaded',
+      async () => await appConnection.getComponentText(downloadResultId),
+      5000
+    );
   });
 });
