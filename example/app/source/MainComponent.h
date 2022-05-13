@@ -16,11 +16,15 @@ public:
         addAndMakeVisible (_incrementButton);
         addAndMakeVisible (_decrementButton);
         addAndMakeVisible (_enableButton);
+        addAndMakeVisible (_downloadButton);
         addAndMakeVisible (_valueLabel);
+        addAndMakeVisible (_downloadResult);
         addAndMakeVisible (_slider);
 
         _valueLabel.setJustificationType (juce::Justification::centred);
+
         _valueLabel.setColour (juce::Label::textColourId, juce::Colours::black);
+        _downloadResult.setColour (juce::Label::textColourId, juce::Colours::black);
 
         updateLabel ();
 
@@ -30,7 +34,18 @@ public:
         _valueLabel.setComponentID ("value-label");
         _slider.setComponentID ("slider");
 
-        _slider.onValueChange = [this] { setValue (_slider.getValue ()); };
+        _downloadButton.setComponentID ("download-button");
+        _downloadResult.setComponentID ("download-result");
+
+        _slider.onValueChange = [this] { setValue (static_cast<int> (_slider.getValue ())); };
+
+        _downloadButton.onClick = [this]
+        {
+            juce::Timer::callAfterDelay (
+                300,
+                [this]
+                { _downloadResult.setText ("Content downloaded", juce::dontSendNotification); });
+        };
     }
 
     void resized () override
@@ -51,6 +66,11 @@ public:
             juce::FlexItem (_valueLabel).withHeight (rowHeight),
             spacer,
             juce::FlexItem (_slider).withHeight (rowHeight),
+            spacer,
+            juce::FlexItem (_downloadButton).withHeight (rowHeight),
+            spacer,
+            juce::FlexItem (_downloadResult).withHeight (rowHeight),
+
         };
 
         flexBox.performLayout (getLocalBounds ().reduced (10));
@@ -93,6 +113,8 @@ private:
     juce::TextButton _incrementButton {"Increment"};
     juce::TextButton _decrementButton {"Decrement"};
     juce::TextButton _enableButton {"Disable"};
+    juce::TextButton _downloadButton {"Download"};
     juce::Label _valueLabel;
+    juce::Label _downloadResult;
     juce::Slider _slider {juce::Slider::LinearHorizontal, juce::Slider::NoTextBox};
 };
